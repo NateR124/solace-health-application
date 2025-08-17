@@ -203,12 +203,9 @@ export const locations = [
 ];
 
 // Helper functions
-export const getLocationBySlug = (slug: string) => 
-  locations.find(l => l.slug === slug);
-
 export const getLocationDisplayName = (slug: string) =>
   {
-    const location = getLocationBySlug(slug);
+    const location = locations.find(l => l.slug === slug);
     return location ? `${location.city}, ${location.state}` : slug;
   };
 
@@ -219,6 +216,3 @@ export const getLocationDisplayNames = (slugs: string[]) =>
 
 export const getAllLocationDisplayNames = () => 
   locations.map(l => `${l.city}, ${l.state}`).sort();
-
-export const getAllLocationSlugs = () => 
-  locations.map(l => l.slug).sort();

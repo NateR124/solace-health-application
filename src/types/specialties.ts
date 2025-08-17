@@ -165,6 +165,8 @@ export const getSpecialtyBySlug = (slug: string) =>
 export const getSpecialtyLabels = (slugs: string[]) => 
   slugs.map(slug => getSpecialtyBySlug(slug)?.label).filter(Boolean);
 
+export const getSpecialtySlugs = (labels: string[]) => 
+  labels.map(label => specialties.find(s => s.label === label)?.slug).filter(Boolean);
 
 // Group specialties by category for UI
 export const getSpecialtiesByCategory = () => {
