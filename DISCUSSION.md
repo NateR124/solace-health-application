@@ -19,8 +19,7 @@ A big theme with my UI/UX changes, would be understanding your business better- 
 
 ![Specialty Filtering](./images/specialty-filtering.png)
 
-- **Styling update:** I think there could have been more color contrast in here. In addition, the modal could have faded into and out of view more smoothly.
-
+- **Styling update:** I think there could have been more color contrast in here. In addition, the modal could have faded into and out of view more smoothly. Overall my thinking was that a user won't know the exact name we use for a category, but they'll "know it when they see it", so I wanted a screen that made it as visually easy as possible to browse and find the right specialty.
 - **Refactor around selecting just one specialty:** An important design choice here was this- do users, in practice, want an advocate with more than one specialty, or is it almost always just one? If the flow was designed to select just one, I'd change this a bit
 - **Synonym Search:** If the grouping didn't work here, or more categories were to be added, a search bar could be added to navigate these specialties as well, making sure each one has a list of synonym terms one would be typing instead (ex: Obsessive Compulsive Disorder would have 'OCD' as a synonym)
 
@@ -42,7 +41,6 @@ A few ideas could have been worth implementing with more time, like:
 ## Data Management
 
 It could have been prudent to include the text representation of locations, specialties, etc. as filterOptions provided by the backend, instead of static types on the front end.
-
 
 ---
 
