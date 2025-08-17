@@ -41,61 +41,67 @@ export default function Home() {
   const [tempSelectedSpecialties, setTempSelectedSpecialties] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fetch advocates data with server-side pagination and filtering
-  const fetchAdvocates = useCallback(async (page: number = 1, searchTerm: string = "", selectedCity: string = "", selectedSpecialties: string[] = []) => {
-    // Start fade-out transition
+  const abortRef = useRef<AbortController | null>(null);
+
+  const fetchAdvocates = useCallback(async (page = 1, searchTerm = "", selectedCity = "", selectedSpecialties: string[] = []) => {
+    // start fade-out before firing network
     setShowContent(false);
-    
-    // Wait for fade-out to complete before starting API call
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
+    await new Promise(r => setTimeout(r, 300));
+
+    // 1) cancel any previous request immediately
+    abortRef.current?.abort();
+
+    // 2) create a fresh controller for this request
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setLoading(true);
     try {
-      
       const params = new URLSearchParams({
-        page: page.toString(),
+        page: String(page),
         limit: "12",
         search: searchTerm,
         city: selectedCity,
         specialties: selectedSpecialties.join(","),
       });
 
-      const response = await fetch(`/api/advocates?${params}`);
-      const jsonResponse: AdvocatesResponse = await response.json();
-      
-      // Ensure minimum loading time for smooth experience
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
-      setAdvocates(jsonResponse.data);
-      setPagination(jsonResponse.pagination);
-      setFilterOptions(jsonResponse.filterOptions);
+      // 3) pass the abort signal to fetch
+      const res = await fetch(`/api/advocates?${params}`, { signal: controller.signal });
+
+      // 4) surface real HTTP errors instead of pretending success
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const json: AdvocatesResponse = await res.json();
+
+      // keep your timing; then commit state for the *current* request
+      await new Promise(r => setTimeout(r, 200));
+      setAdvocates(json.data);
+      setPagination(json.pagination);
+      setFilterOptions(json.filterOptions);
+    } catch (err: any) {
+      // 5) ignore aborts; they’re expected when user changes inputs quickly
+      if (err.name !== "AbortError") console.error("Error fetching advocates:", err);
+    } finally {
       setLoading(false);
-      
-      // Start fade-in transition after a brief delay
-      setTimeout(() => {
-        setShowContent(true);
-      }, 100);
-      
-    } catch (error) {
-      console.error("Error fetching advocates:", error);
-      setLoading(false);
-      setShowContent(true);
+      setTimeout(() => setShowContent(true), 100);
     }
   }, []);
 
   // Handle all filter changes
-  useEffect(() => {
-    if (filters.searchTerm) {
-      const timeoutId = setTimeout(() => {
-        fetchAdvocates(1, filters.searchTerm, filters.selectedCity, filters.selectedSpecialties);
-      }, 300);
-      
-      return () => clearTimeout(timeoutId);
-    } else {
-      // For non-search or empty search, call immediately
-      fetchAdvocates(1, filters.searchTerm, filters.selectedCity, filters.selectedSpecialties);
-    }
-  }, [filters.searchTerm, filters.selectedCity, filters.selectedSpecialties, fetchAdvocates]);
+useEffect(() => {
+  const run = () => {
+    fetchAdvocates(1, filters.searchTerm, filters.selectedCity, filters.selectedSpecialties);
+  };
+
+  // Debounce only when the user is typing
+  if (filters.searchTerm) {
+    const id = setTimeout(run, 300);
+    return () => clearTimeout(id);
+  }
+
+  // Empty search: fire immediately (also immediate for city/specialty changes)
+  run();
+}, [filters.searchTerm, filters.selectedCity, filters.selectedSpecialties, fetchAdvocates]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilters(prev => ({ ...prev, searchTerm: e.target.value }));
