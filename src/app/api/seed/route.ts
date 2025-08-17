@@ -1,7 +1,6 @@
 import db from "@/db";
 import { advocates } from "@/db/schema";
 import { advocateData } from "@/db/seed/advocates";
-// import { toJsonbStringArray } from "@/db/seed/utils";
 
 export async function POST() {
   await db.delete(advocates);
