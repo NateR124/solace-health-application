@@ -330,9 +330,9 @@ export default function Home() {
             showContent ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-6'
           }`}
         >
-          {advocates.map((advocate, index) => (
+          {advocates.map((advocate) => (
             <div 
-              key={`${advocate.firstName}-${advocate.lastName}-${index}`} 
+              key={advocate.id} 
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:scale-105"
             >
               {/* Placeholder for profile picture */}

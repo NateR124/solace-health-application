@@ -1,5 +1,5 @@
 export interface Advocate {
-  id?: number;
+  id: number;
   firstName: string;
   lastName: string;
   city: string;
