@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Advocate, FilterState, PaginationInfo, FilterOptions, AdvocatesResponse } from "@/types/advocate";
-import { specialties, getSpecialtySlugs, getSpecialtiesByCategory } from "@/db/specialties";
+import { getLocationDisplayNameBySlug } from "@/types/locations";
+import { getSpecialtySlugs, getSpecialtiesByCategory } from "@/types/specialties";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -95,7 +96,6 @@ export default function Home() {
 
   // Handle all filter changes
   useEffect(() => {
-    // For search, use debouncing
     if (filters.searchTerm) {
       const timeoutId = setTimeout(() => {
         fetchAdvocates(1, filters.searchTerm, filters.selectedCity, filters.selectedSpecialties);
@@ -106,7 +106,7 @@ export default function Home() {
       // For non-search or empty search, call immediately
       fetchAdvocates(1, filters.searchTerm, filters.selectedCity, filters.selectedSpecialties);
     }
-  }, [filters.searchTerm, filters.selectedCity, filters.selectedSpecialties]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [filters.searchTerm, filters.selectedCity, filters.selectedSpecialties, fetchAdvocates]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilters(prev => ({ ...prev, searchTerm: e.target.value }));
@@ -355,9 +355,9 @@ export default function Home() {
                 </h3>
                 
                 <div className="space-y-2 text-sm text-gray-600">
-                  <p className="font-body"><span className="font-subheading">Location:</span> {advocate.city}</p>
+                  <p className="font-body">{getLocationDisplayNameBySlug(advocate.city)}</p>
                   <p className="font-body"><span className="font-subheading">Experience:</span> {advocate.yearsOfExperience} years</p>
-                  <p className="font-body"><span className="font-subheading">Phone:</span> {formatPhoneNumber(advocate.phoneNumber)}</p>
+                  <p className="font-body">{formatPhoneNumber(advocate.phoneNumber)}</p>
                 </div>
                 
                 {/* Specialties */}

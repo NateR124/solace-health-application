@@ -1,7 +1,7 @@
-import db from "../../../db";
-import { advocates } from "../../../db/schema";
-import { specialties, getSpecialtyLabels } from "../../../db/specialties";
-import { getLocationDisplayNames, getLocationByCity } from "../../../db/locations";
+import db from "@/db";
+import { advocates } from "@/db/schema";
+import { specialties, getSpecialtyLabels } from "@/types/specialties";
+import { getLocationDisplayNames, getLocationByCity } from "@/types/locations";
 import { NextRequest } from "next/server";
 import { sql, ilike, and, or } from "drizzle-orm";
 
@@ -17,7 +17,9 @@ export async function GET(request: NextRequest) {
   // Get filter parameters
   const searchTerm = searchParams.get("search") || "";
   const selectedCityDisplay = searchParams.get("city") || "";
-  const selectedSpecialties = searchParams.get("specialties")?.split(",").filter(Boolean) || []; // These are slugs
+  console.log('selected city display is now: ',selectedCityDisplay);
+
+  const selectedSpecialties = searchParams.get("specialties")?.split(",").filter(Boolean) || [];
   
   // Convert "City, State" back to just city name for database filtering
   const selectedCity = selectedCityDisplay.includes(',') 

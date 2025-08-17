@@ -1,6 +1,4 @@
-import db from "..";
-import { advocates } from "../schema";
-import { specialties } from "../specialties";
+import { specialties } from "../../types/specialties";
 
 // Extract just the slugs for random selection
 const specialtySlugs = specialties.map(s => s.slug);
@@ -16,7 +14,7 @@ const advocateData = [
   {
     firstName: "John",
     lastName: "Doe",
-    city: "New York",
+    city: "new-york",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 10,
@@ -25,7 +23,7 @@ const advocateData = [
   {
     firstName: "Jane",
     lastName: "Smith",
-    city: "Los Angeles",
+    city: "los-angeles",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 8,
@@ -34,7 +32,7 @@ const advocateData = [
   {
     firstName: "Alice",
     lastName: "Johnson",
-    city: "Chicago",
+    city: "chicago",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 5,
@@ -43,7 +41,7 @@ const advocateData = [
   {
     firstName: "Michael",
     lastName: "Brown",
-    city: "Houston",
+    city: "houston",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 12,
@@ -52,7 +50,7 @@ const advocateData = [
   {
     firstName: "Emily",
     lastName: "Davis",
-    city: "Phoenix",
+    city: "phoenix",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 7,
@@ -61,7 +59,7 @@ const advocateData = [
   {
     firstName: "Chris",
     lastName: "Martinez",
-    city: "Philadelphia",
+    city: "philadelphia",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 9,
@@ -70,7 +68,7 @@ const advocateData = [
   {
     firstName: "Jessica",
     lastName: "Taylor",
-    city: "San Antonio",
+    city: "san-antonio",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 11,
@@ -79,7 +77,7 @@ const advocateData = [
   {
     firstName: "David",
     lastName: "Harris",
-    city: "San Diego",
+    city: "san-diego",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 6,
@@ -88,7 +86,7 @@ const advocateData = [
   {
     firstName: "Laura",
     lastName: "Clark",
-    city: "Dallas",
+    city: "dallas",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 4,
@@ -97,7 +95,7 @@ const advocateData = [
   {
     firstName: "Daniel",
     lastName: "Lewis",
-    city: "San Jose",
+    city: "san-jose",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 13,
@@ -106,7 +104,7 @@ const advocateData = [
   {
     firstName: "Sarah",
     lastName: "Lee",
-    city: "Austin",
+    city: "austin",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 10,
@@ -115,7 +113,7 @@ const advocateData = [
   {
     firstName: "James",
     lastName: "King",
-    city: "Jacksonville",
+    city: "jacksonville",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 5,
@@ -124,7 +122,7 @@ const advocateData = [
   {
     firstName: "Megan",
     lastName: "Green",
-    city: "San Francisco",
+    city: "san-francisco",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 14,
@@ -133,7 +131,7 @@ const advocateData = [
   {
     firstName: "Joshua",
     lastName: "Walker",
-    city: "Columbus",
+    city: "columbus",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 9,
@@ -142,7 +140,7 @@ const advocateData = [
   {
     firstName: "Amanda",
     lastName: "Hall",
-    city: "Fort Worth",
+    city: "fort-worth",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 3,
@@ -151,7 +149,7 @@ const advocateData = [
   {
     firstName: "Robert",
     lastName: "Wilson",
-    city: "Seattle",
+    city: "seattle",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 15,
@@ -160,7 +158,7 @@ const advocateData = [
   {
     firstName: "Lisa",
     lastName: "Anderson",
-    city: "Denver",
+    city: "denver",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 8,
@@ -169,7 +167,7 @@ const advocateData = [
   {
     firstName: "Mark",
     lastName: "Thompson",
-    city: "Boston",
+    city: "boston",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 6,
@@ -178,7 +176,7 @@ const advocateData = [
   {
     firstName: "Rachel",
     lastName: "Garcia",
-    city: "Miami",
+    city: "miami",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 12,
@@ -187,7 +185,7 @@ const advocateData = [
   {
     firstName: "Kevin",
     lastName: "Rodriguez",
-    city: "Las Vegas",
+    city: "las-vegas",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 9,
@@ -196,7 +194,7 @@ const advocateData = [
   {
     firstName: "Angela",
     lastName: "Miller",
-    city: "Portland",
+    city: "portland",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 7,
@@ -205,7 +203,7 @@ const advocateData = [
   {
     firstName: "Brian",
     lastName: "Moore",
-    city: "Nashville",
+    city: "nashville",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 11,
@@ -214,7 +212,7 @@ const advocateData = [
   {
     firstName: "Stephanie",
     lastName: "Jackson",
-    city: "Atlanta",
+    city: "atlanta",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 5,
@@ -223,7 +221,7 @@ const advocateData = [
   {
     firstName: "Ryan",
     lastName: "White",
-    city: "Charlotte",
+    city: "charlotte",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 8,
@@ -232,7 +230,7 @@ const advocateData = [
   {
     firstName: "Nicole",
     lastName: "Thomas",
-    city: "Tampa",
+    city: "tampa",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 13,
@@ -241,7 +239,7 @@ const advocateData = [
   {
     firstName: "Gregory",
     lastName: "Martin",
-    city: "Kansas City",
+    city: "kansas-city",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 10,
@@ -250,7 +248,7 @@ const advocateData = [
   {
     firstName: "Michelle",
     lastName: "Lopez",
-    city: "Raleigh",
+    city: "raleigh",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 4,
@@ -259,7 +257,7 @@ const advocateData = [
   {
     firstName: "Anthony",
     lastName: "Gonzalez",
-    city: "Orlando",
+    city: "orlando",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 16,
@@ -268,7 +266,7 @@ const advocateData = [
   {
     firstName: "Kimberly",
     lastName: "Perez",
-    city: "Sacramento",
+    city: "sacramento",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 7,
@@ -277,7 +275,7 @@ const advocateData = [
   {
     firstName: "Christopher",
     lastName: "Roberts",
-    city: "Pittsburgh",
+    city: "pittsburgh",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 9,
@@ -286,7 +284,7 @@ const advocateData = [
   {
     firstName: "Jennifer",
     lastName: "Turner",
-    city: "Cincinnati",
+    city: "cincinnati",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 14,
@@ -295,7 +293,7 @@ const advocateData = [
   {
     firstName: "Andrew",
     lastName: "Phillips",
-    city: "Cleveland",
+    city: "cleveland",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 6,
@@ -304,7 +302,7 @@ const advocateData = [
   {
     firstName: "Amy",
     lastName: "Campbell",
-    city: "St. Louis",
+    city: "st-louis",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 11,
@@ -313,7 +311,7 @@ const advocateData = [
   {
     firstName: "Scott",
     lastName: "Parker",
-    city: "Minneapolis",
+    city: "minneapolis",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 8,
@@ -322,7 +320,7 @@ const advocateData = [
   {
     firstName: "Rebecca",
     lastName: "Evans",
-    city: "New Orleans",
+    city: "new-orleans",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 12,
@@ -331,7 +329,7 @@ const advocateData = [
   {
     firstName: "Brandon",
     lastName: "Edwards",
-    city: "Salt Lake City",
+    city: "salt-lake-city",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 5,
@@ -340,7 +338,7 @@ const advocateData = [
   {
     firstName: "Melissa",
     lastName: "Collins",
-    city: "Richmond",
+    city: "richmond",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 15,
@@ -349,7 +347,7 @@ const advocateData = [
   {
     firstName: "Justin",
     lastName: "Stewart",
-    city: "Buffalo",
+    city: "buffalo",
     degree: "PhD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 7,
@@ -358,7 +356,7 @@ const advocateData = [
   {
     firstName: "Heather",
     lastName: "Sanchez",
-    city: "Norfolk",
+    city: "norfolk",
     degree: "MSW",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 10,
@@ -367,7 +365,7 @@ const advocateData = [
   {
     firstName: "Eric",
     lastName: "Morris",
-    city: "Spokane",
+    city: "spokane",
     degree: "MD",
     specialties: specialtySlugs.slice(...randomSpecialty()),
     yearsOfExperience: 13,

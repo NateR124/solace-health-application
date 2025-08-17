@@ -209,10 +209,15 @@ export const getLocationBySlug = (slug: string) =>
 export const getLocationByCity = (city: string) => 
   locations.find(l => l.city === city);
 
-export const getLocationDisplayNames = (cities: string[]) => 
-  cities.map(city => {
-    const location = getLocationByCity(city);
-    return location ? `${location.city}, ${location.state}` : city;
+export const getLocationDisplayNameBySlug = (slug: string) =>
+  {
+    const location = getLocationBySlug(slug);
+    return location ? `${location.city}, ${location.state}` : slug;
+  };
+
+export const getLocationDisplayNames = (slugs: string[]) => 
+  slugs.map(slug => {
+    return getLocationDisplayNameBySlug(slug);
   });
 
 export const getLocationSlugs = (displayNames: string[]) => 
