@@ -10,17 +10,18 @@ export async function GET(request: NextRequest) {
   
   // Get pagination parameters
   const rawPage = parseInt(searchParams.get("page") || "1");
-  const page = Math.max(1, rawPage); // Ensure page is at least 1
+  const page = Math.max(1, rawPage);
   const limit = parseInt(searchParams.get("limit") || "12");
   const offset = (page - 1) * limit;
   
   // Get filter parameters
   const searchTerm = searchParams.get("search") || "";
   const selectedCityDisplay = searchParams.get("city") || "";
-  console.log('selected city display is now: ',selectedCityDisplay);
-
   const selectedSpecialties = searchParams.get("specialties")?.split(",").filter(Boolean) || [];
-  
+  console.log("Query string is: ",searchParams.get("specialties"));
+  console.log("Selected City display is: ",selectedCityDisplay);
+  console.log("Selected specialties are: ",selectedSpecialties);
+
   // Convert "City, State" back to just city name for database filtering
   const selectedCity = selectedCityDisplay.includes(',') 
     ? selectedCityDisplay.split(',')[0].trim() 
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest) {
     // Build where conditions
     const conditions = [];
     
-    // Search by name (names that start with the search term)
+    // Search by name
     if (searchTerm) {
       conditions.push(
         or(
@@ -69,13 +70,14 @@ export async function GET(request: NextRequest) {
       .offset(offset);
     
     // Transform specialty slugs to full labels and cities to "City, State" format for frontend
-    const filteredData = rawFilteredData.map((advocate: any) => ({
-      ...advocate,
-      specialties: getSpecialtyLabels(advocate.specialties as string[]),
-      city: getLocationByCity(advocate.city) 
-        ? `${getLocationByCity(advocate.city)!.city}, ${getLocationByCity(advocate.city)!.state}`
-        : advocate.city
-    }));
+    const filteredData = rawFilteredData.map((advocate: any) => {
+      const loc = getLocationByCity(advocate.city);
+      return {
+        ...advocate,
+        specialties: getSpecialtyLabels(advocate.specialties as string[]),
+        city: loc ? `${loc.city}, ${loc.state}` : advocate.city
+      };
+    });
     
     // Get total count for pagination
     const totalCountResult = await db
@@ -86,9 +88,8 @@ export async function GET(request: NextRequest) {
     const totalCount = totalCountResult[0]?.count || 0;
     const totalPages = Math.ceil(totalCount / limit);
     
-    // Get unique cities in "City, State" format for filter options
-    const uniqueCityNames = Array.from(new Set(allData.map((advocate: any) => advocate.city)));
-    const allCities = getLocationDisplayNames(uniqueCityNames as string[]).sort();
+    // Get unique city slugs for filter options  
+    const allCities = Array.from(new Set(allData.map((advocate: any) => advocate.city))).sort();
     
     // Return all available specialties with their full labels
     const allSpecialties = specialties.map(s => s.label).sort((a, b) => a.localeCompare(b));

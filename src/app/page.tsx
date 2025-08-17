@@ -7,7 +7,7 @@ import { getSpecialtySlugs, getSpecialtiesByCategory } from "@/types/specialties
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
-  const [loading, setLoading] = useState(true); // Start with loading true for initial state
+  const [loading, setLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const [currentlyDisplayedFilters, setCurrentlyDisplayedFilters] = useState<FilterState>({
     searchTerm: "",
@@ -23,6 +23,7 @@ export default function Home() {
     }
     return phoneStr; // Return as-is if not 10 digits
   };
+
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
     selectedCity: "",
@@ -163,7 +164,7 @@ export default function Home() {
   const handlePageChange = (page: number) => {
     fetchAdvocates(page, filters.searchTerm, filters.selectedCity, filters.selectedSpecialties);
     
-    // Scroll to top of page smoothly
+    // Scroll to top of page
     window.scrollTo({ 
       top: 0, 
       behavior: 'smooth' 
@@ -220,7 +221,7 @@ export default function Home() {
               className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[rgb(40,94,80)]/20 focus:border-[rgb(40,94,80)] font-body transition-all duration-300 hover:bg-white/90 shadow-sm hover:shadow-md text-left flex items-center justify-between"
             >
               <span className={filters.selectedCity ? "text-gray-900" : "text-gray-500"}>
-                {filters.selectedCity || "Location"}
+                {filters.selectedCity ? getLocationDisplayNameBySlug(filters.selectedCity) : "Location"}
               </span>
               <svg 
                 className={`w-4 h-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
@@ -254,7 +255,7 @@ export default function Home() {
                       filters.selectedCity === city ? 'bg-[rgb(40,94,80)]/5 text-[rgb(40,94,80)]' : ''
                     }`}
                   >
-                    {city}
+                    {getLocationDisplayNameBySlug(city)}
                   </button>
                 ))}
               </div>
