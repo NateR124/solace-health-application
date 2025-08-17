@@ -215,6 +215,7 @@ export default function Home() {
           {/* Location Filter - Custom Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
+              title="Toggle specialty"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[rgb(40,94,80)]/20 focus:border-[rgb(40,94,80)] font-body transition-all duration-300 hover:bg-white/90 shadow-sm hover:shadow-md text-left flex items-center justify-between"
             >
@@ -240,6 +241,7 @@ export default function Home() {
               <div className="max-h-48 overflow-y-auto">
                 <button
                   onClick={() => handleCityChange("")}
+                  title="Select All Locations"
                   className="w-full px-4 py-3 text-left hover:bg-[rgb(40,94,80)]/10 transition-all duration-200 font-body border-b border-gray-100 last:border-b-0"
                 >
                   All Locations
@@ -307,6 +309,7 @@ export default function Home() {
                 >
                   {specialty}
                   <button
+                    title="Set Filters"
                     onClick={() => setFilters(prev => ({
                       ...prev,
                       selectedSpecialties: prev.selectedSpecialties.filter(s => s !== specialty)
@@ -469,6 +472,7 @@ export default function Home() {
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-2xl font-heading text-gray-800">Select Specializations</h2>
               <button
+                title="Close Speciality Modal"
                 onClick={closeSpecialtyModal}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
               >
@@ -492,6 +496,7 @@ export default function Home() {
                     >
                       {specialty}
                       <button
+                        title="Toggle Temp Specialty"
                         onClick={() => toggleTempSpecialty(specialty)}
                         className="ml-1 hover:bg-white/20 rounded-full p-0.5 transition-colors"
                       >
