@@ -14,6 +14,9 @@ A big theme with my UI/UX changes, would be understanding your business better- 
 
 - **Add Year Filtering**: Allow users to filter advocates by years of experience.
 - **Display Years of Experience differently**: I was unsatisfied with how it looks here. With regard to filtering and to displaying, I'd really want to know how users should be considering years of experience- is it always better? Is having years about a certain threshold important? How would we like them to use years of experience? I feel like you could bias your user into over or under emphasizing years of experience, depending on how you present it.
+- **Candidate Order of Appearance:** Because, in practice, users will likely browse from the first advocate onward, an advocate appearing higher in the list will gain them signficantly more engagement. So the question is, for both our business, our users, and our advocates sake, how do we want to list these candidates? Alphabetically? In a random order every time? Or ordered by something else instead?
+- **Photos, bios:** I added a placeholder, but I feel like picking a healthcare advocate requires a lot of trust, and seeing a face/reading a bio makes someone feel more human and trustworthy. I felt strongly about the photo being important, so added an element even though nothing was provided with the existing data/specs.
+- **Learn More:** Some sort of link to go to a dedicated page about the individual could have been useful here (ex: to be able to see all of their specialties, to see their bio/other additional info)
 
 ### Specialty Filtering
 
