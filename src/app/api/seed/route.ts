@@ -5,11 +5,6 @@ import { advocateData } from "@/db/seed/advocates";
 export async function POST() {
   await db.delete(advocates);
 
-  const rows = advocateData.map(r => ({
-    ...r,
-    specialties: r.specialties,
-  }));
-
-  const records = await db.insert(advocates).values(rows).returning();
+  const records = await db.insert(advocates).values(advocateData).returning();
   return Response.json({ advocates: records });
 }
