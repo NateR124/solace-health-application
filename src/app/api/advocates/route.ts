@@ -1,6 +1,5 @@
 import db from "@/db";
 import { advocates } from "@/db/schema";
-import { specialties } from "@/types/specialties";
 import { NextRequest } from "next/server";
 import { sql, ilike, and, or } from "drizzle-orm";
 
@@ -19,11 +18,9 @@ export async function GET(request: NextRequest) {
   const selectedSpecialties = searchParams.get("specialties")?.split(",").filter(Boolean) || [];
   
   try {
-    
-    // Build where conditions
     const conditions = [];
     
-    // Search by name
+    // Filter by first or last name
     if (searchTerm) {
       conditions.push(
         or(
@@ -38,26 +35,24 @@ export async function GET(request: NextRequest) {
       conditions.push(sql`${advocates.city} = ${selectedCity}`);
     }
     
-// ALL selected slugs must be present (strict AND via EXISTS per slug)
-if (selectedSpecialties.length > 0) {
-  const mustHaveAll = selectedSpecialties
-    .map(s => s.trim())
-    .filter(Boolean)
-    .map(s =>
-      sql`
-        EXISTS (
-          SELECT 1
-          FROM jsonb_array_elements_text(((${advocates.specialties} #>> '{}')::jsonb)) AS e(val)
-          WHERE val = ${s}
-        )
-      `
-    );
+    // Filter by specialties
+    if (selectedSpecialties.length > 0) {
+      const mustHaveAll = selectedSpecialties
+        .map(s => s.trim())
+        .filter(Boolean)
+        .map(s =>
+          sql`
+            EXISTS (
+              SELECT 1
+              FROM jsonb_array_elements_text(((${advocates.specialties} #>> '{}')::jsonb)) AS e(val)
+              WHERE val = ${s}
+            )
+          `
+        );
 
-  // AND all EXISTS together
-  conditions.push(and(...mustHaveAll));
-}
+      conditions.push(and(...mustHaveAll));
+    }
     
-    // Get filtered data with pagination
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
     
     const rawFilteredData = await db
@@ -76,14 +71,6 @@ if (selectedSpecialties.length > 0) {
     const totalCount = totalCountResult[0]?.count || 0;
     const totalPages = Math.ceil(totalCount / limit);
     
-    // Get unique cities for filter options (only when needed)
-    const allCities = await db
-      .selectDistinct({ city: advocates.city })
-      .from(advocates)
-      .then((rows: Array<{ city: string }>) => rows.map(row => row.city).sort());
-    
-    // Return all available specialties
-    const allSpecialties = specialties.map(s => s.label).sort((a, b) => a.localeCompare(b));
 
     return Response.json({
       data: rawFilteredData,
@@ -94,10 +81,6 @@ if (selectedSpecialties.length > 0) {
         limit,
         hasNextPage: page < totalPages,
         hasPreviousPage: page > 1
-      },
-      filterOptions: {
-        cities: allCities,
-        specialties: allSpecialties
       }
     });
   } catch (error) {

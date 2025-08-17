@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { Advocate, FilterState, PaginationInfo, FilterOptions, AdvocatesResponse } from "@/types/advocate";
-import { getLocationDisplayName } from "@/types/locations";
+import { Advocate, FilterState, PaginationInfo, AdvocatesResponse } from "@/types/advocate";
+import { getLocationDisplayName, getLocationOptions } from "@/types/locations";
 import { getSpecialtyBySlug, getSpecialtiesByCategory } from "@/types/specialties";
 
 export default function Home() {
@@ -31,10 +31,6 @@ export default function Home() {
     limit: 12,
     hasNextPage: false,
     hasPreviousPage: false,
-  });
-  const [filterOptions, setFilterOptions] = useState<FilterOptions>({
-    cities: [],
-    specialties: [],
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSpecialtyModalOpen, setIsSpecialtyModalOpen] = useState(false);
@@ -77,7 +73,6 @@ export default function Home() {
       await new Promise(r => setTimeout(r, 200));
       setAdvocates(json.data);
       setPagination(json.pagination);
-      setFilterOptions(json.filterOptions);
     } catch (err: any) {
       // 5) ignore aborts; they’re expected when user changes inputs quickly
       if (err.name !== "AbortError") console.error("Error fetching advocates:", err);
@@ -240,16 +235,16 @@ useEffect(() => {
                 >
                   All Locations
                 </button>
-                {filterOptions.cities.map(city => (
+                {getLocationOptions().map(location => (
                   <button
                     type="button"
-                    key={city}
-                    onClick={() => handleCityChange(city)}
+                    key={location.value}
+                    onClick={() => handleCityChange(location.value)}
                     className={`w-full px-4 py-3 text-left hover:bg-[rgb(40,94,80)]/10 transition-all duration-200 font-body border-b border-gray-100 last:border-b-0 ${
-                      filters.selectedCity === city ? 'bg-[rgb(40,94,80)]/5 text-[rgb(40,94,80)]' : ''
+                      filters.selectedCity === location.value ? 'bg-[rgb(40,94,80)]/5 text-[rgb(40,94,80)]' : ''
                     }`}
                   >
-                    {getLocationDisplayName(city)}
+                    {location.label}
                   </button>
                 ))}
               </div>

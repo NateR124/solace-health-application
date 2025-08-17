@@ -209,10 +209,8 @@ export const getLocationDisplayName = (slug: string) =>
     return location ? `${location.city}, ${location.state}` : slug;
   };
 
-export const getLocationDisplayNames = (slugs: string[]) => 
-  slugs.map(slug => {
-    return getLocationDisplayName(slug);
-  });
-
-export const getAllLocationDisplayNames = () => 
-  locations.map(l => `${l.city}, ${l.state}`).sort();
+export const getLocationOptions = () => 
+  locations.map(l => ({
+    value: l.slug,
+    label: `${l.city}, ${l.state}`
+  })).sort((a, b) => a.label.localeCompare(b.label));

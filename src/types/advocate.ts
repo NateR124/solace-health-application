@@ -25,13 +25,8 @@ export interface PaginationInfo {
   hasPreviousPage: boolean;
 }
 
-export interface FilterOptions {
-  cities: string[];
-  specialties: string[];
-}
 
 export interface AdvocatesResponse {
   data: Advocate[];
   pagination: PaginationInfo;
-  filterOptions: FilterOptions;
 }
