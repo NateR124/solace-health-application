@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Advocate, FilterState, PaginationInfo, FilterOptions, AdvocatesResponse } from "@/types/advocate";
-import { getLocationDisplayNameBySlug } from "@/types/locations";
-import { getSpecialtySlugs, getSpecialtiesByCategory } from "@/types/specialties";
+import { getLocationDisplayName } from "@/types/locations";
+import { getSpecialtyBySlug, getSpecialtiesByCategory } from "@/types/specialties";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -56,15 +56,13 @@ export default function Home() {
     
     setLoading(true);
     try {
-      // Convert specialty names to slugs for API
-      const specialtySlugs = getSpecialtySlugs(selectedSpecialties);
       
       const params = new URLSearchParams({
         page: page.toString(),
         limit: "12",
         search: searchTerm,
         city: selectedCity,
-        specialties: specialtySlugs.join(","),
+        specialties: selectedSpecialties.join(","),
       });
 
       const response = await fetch(`/api/advocates?${params}`);
@@ -191,16 +189,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Green Top Section */}
-      <div className="w-full h-5 bg-[#1d4339]"></div>
-      
+    <div className="h-screen bg-[#1d4339] overflow-auto">
       {/* Main Content Area with Curved Corners */}
-      <main className="bg-[rgb(255,253,250)] rounded-t-3xl relative -mt-3 min-h-screen">
+      <main className="bg-[rgb(255,253,250)] rounded-t-3xl w-full min-h-screen mt-8">
         <div className="container mx-auto px-6 pt-12 pb-8">
 
       {/* Filters Section */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8 transition-all duration-600 ease-in-out">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Name Search */}
           <div>
@@ -221,7 +216,7 @@ export default function Home() {
               className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[rgb(40,94,80)]/20 focus:border-[rgb(40,94,80)] font-body transition-all duration-300 hover:bg-white/90 shadow-sm hover:shadow-md text-left flex items-center justify-between"
             >
               <span className={filters.selectedCity ? "text-gray-900" : "text-gray-500"}>
-                {filters.selectedCity ? getLocationDisplayNameBySlug(filters.selectedCity) : "Location"}
+                {filters.selectedCity ? getLocationDisplayName(filters.selectedCity) : "Location"}
               </span>
               <svg 
                 className={`w-4 h-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
@@ -255,7 +250,7 @@ export default function Home() {
                       filters.selectedCity === city ? 'bg-[rgb(40,94,80)]/5 text-[rgb(40,94,80)]' : ''
                     }`}
                   >
-                    {getLocationDisplayNameBySlug(city)}
+                    {getLocationDisplayName(city)}
                   </button>
                 ))}
               </div>
@@ -289,8 +284,10 @@ export default function Home() {
         </div>
         
         {/* Selected Specialties Display */}
-        {filters.selectedSpecialties.length > 0 && (
-          <div className="mt-6 p-4 bg-[rgb(40,94,80)]/5 rounded-xl border border-[rgb(40,94,80)]/20">
+        <div className={`overflow-hidden transition-all duration-600 ease-in-out ${
+          filters.selectedSpecialties.length > 0 ? 'max-h-96 opacity-100 mt-6' : 'max-h-0 opacity-0 mt-0'
+        }`}>
+          <div className="p-4 bg-[rgb(40,94,80)]/5 rounded-xl border border-[rgb(40,94,80)]/20">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-subheading text-gray-700">
                 Selected Specializations ({filters.selectedSpecialties.length})
@@ -308,7 +305,7 @@ export default function Home() {
                   key={specialty}
                   className="inline-flex items-center gap-1 px-3 py-1 bg-[rgb(40,94,80)] text-white text-sm rounded-full font-light"
                 >
-                  {specialty}
+                  {getSpecialtyBySlug(specialty)?.label || specialty}
                   <button
                     title="Set Filters"
                     onClick={() => setFilters(prev => ({
@@ -325,7 +322,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-        )}
+        </div>
       </div>
 
 
@@ -356,7 +353,7 @@ export default function Home() {
                 </h3>
                 
                 <div className="space-y-2 text-sm text-gray-600">
-                  <p className="font-body">{getLocationDisplayNameBySlug(advocate.city)}</p>
+                  <p className="font-body">{getLocationDisplayName(advocate.city)}</p>
                   <p className="font-body"><span className="font-subheading">Experience:</span> {advocate.yearsOfExperience} years</p>
                   <p className="font-body">{formatPhoneNumber(advocate.phoneNumber)}</p>
                 </div>
@@ -390,9 +387,9 @@ export default function Home() {
                                   ? "bg-[rgb(40,94,80)] text-white hover:bg-[rgb(52,120,102)]"
                                   : "bg-[#1d4339]/10 text-[#1d4339] hover:bg-[#1d4339]/20"
                               }`}
-                              title={`${currentlyDisplayedFilters.selectedSpecialties.includes(specialty) ? 'Remove' : 'Add'} ${specialty} filter`}
+                              title={`${currentlyDisplayedFilters.selectedSpecialties.includes(specialty) ? 'Remove' : 'Add'} ${getSpecialtyBySlug(specialty)?.label || specialty} filter`}
                             >
-                              {specialty}
+                              {getSpecialtyBySlug(specialty)?.label || specialty}
                             </button>
                           ))}
                           {advocate.specialties.length > 3 && (
@@ -495,7 +492,7 @@ export default function Home() {
                       key={specialty}
                       className="inline-flex items-center gap-1 px-3 py-1 bg-[rgb(40,94,80)] text-white text-sm rounded-full font-light"
                     >
-                      {specialty}
+                      {getSpecialtyBySlug(specialty)?.label || specialty}
                       <button
                         title="Toggle Temp Specialty"
                         onClick={() => toggleTempSpecialty(specialty)}
@@ -522,9 +519,9 @@ export default function Home() {
                     {categorySpecialties.map(specialty => (
                       <button
                         key={specialty.slug}
-                        onClick={() => toggleTempSpecialty(specialty.label)}
+                        onClick={() => toggleTempSpecialty(specialty.slug)}
                         className={`p-4 rounded-xl border-2 text-left transition-all duration-200 font-body ${
-                          tempSelectedSpecialties.includes(specialty.label)
+                          tempSelectedSpecialties.includes(specialty.slug)
                             ? "border-[rgb(40,94,80)] bg-[rgb(40,94,80)]/10 text-[rgb(40,94,80)]"
                             : "border-gray-200 bg-white/50 hover:border-[rgb(40,94,80)]/30 hover:bg-[rgb(40,94,80)]/5"
                         }`}
@@ -536,7 +533,7 @@ export default function Home() {
                               <div className="text-xs text-gray-500 mt-1">{specialty.subLabel}</div>
                             )}
                           </div>
-                          {tempSelectedSpecialties.includes(specialty.label) && (
+                          {tempSelectedSpecialties.includes(specialty.slug) && (
                             <svg className="w-5 h-5 text-[rgb(40,94,80)] ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>

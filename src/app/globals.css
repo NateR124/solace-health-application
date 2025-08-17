@@ -5,10 +5,23 @@
 @tailwind utilities;
 
 @layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
   html, body {
     font-family: 'Lato', 'Helvetica', sans-serif;
     font-feature-settings: "liga", "kern";
     background-color: rgb(255, 253, 250);
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  body {
+    line-height: 1;
   }
 }
 

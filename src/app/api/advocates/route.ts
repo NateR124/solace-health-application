@@ -1,7 +1,6 @@
 import db from "@/db";
 import { advocates } from "@/db/schema";
-import { specialties, getSpecialtyLabels } from "@/types/specialties";
-import { getLocationDisplayNames, getLocationByCity } from "@/types/locations";
+import { specialties } from "@/types/specialties";
 import { NextRequest } from "next/server";
 import { sql, ilike, and, or } from "drizzle-orm";
 
@@ -51,7 +50,6 @@ export async function GET(request: NextRequest) {
     
     // Filter by specialties (check if any selected specialty exists in the JSONB array)
     if (selectedSpecialties.length > 0) {
-      // Try the most basic approach with literal SQL
       const specialtyConditions = selectedSpecialties.map(specialty => {
         const jsonArray = JSON.stringify([specialty]);
         return sql.raw(`payload @> '${jsonArray}'`);
@@ -69,15 +67,7 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .offset(offset);
     
-    // Transform specialty slugs to full labels and cities to "City, State" format for frontend
-    const filteredData = rawFilteredData.map((advocate: any) => {
-      const loc = getLocationByCity(advocate.city);
-      return {
-        ...advocate,
-        specialties: getSpecialtyLabels(advocate.specialties as string[]),
-        city: loc ? `${loc.city}, ${loc.state}` : advocate.city
-      };
-    });
+    const filteredData = rawFilteredData;
     
     // Get total count for pagination
     const totalCountResult = await db
@@ -88,10 +78,10 @@ export async function GET(request: NextRequest) {
     const totalCount = totalCountResult[0]?.count || 0;
     const totalPages = Math.ceil(totalCount / limit);
     
-    // Get unique city slugs for filter options  
+    // Get unique cities for filter options
     const allCities = Array.from(new Set(allData.map((advocate: any) => advocate.city))).sort();
     
-    // Return all available specialties with their full labels
+    // Return all available specialties
     const allSpecialties = specialties.map(s => s.label).sort((a, b) => a.localeCompare(b));
 
     return Response.json({
