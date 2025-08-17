@@ -12,9 +12,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "downlevelIteration": true,
-    "target": "es2017",
-    "forceConsistentCasingInFileNames": true,
     "plugins": [
       {
         "name": "next"
