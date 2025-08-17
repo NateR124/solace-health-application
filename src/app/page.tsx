@@ -211,6 +211,7 @@ export default function Home() {
           {/* Location Filter - Custom Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
+              type="button"
               title="Toggle specialty"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[rgb(40,94,80)]/20 focus:border-[rgb(40,94,80)] font-body transition-all duration-300 hover:bg-white/90 shadow-sm hover:shadow-md text-left flex items-center justify-between"
@@ -236,6 +237,7 @@ export default function Home() {
             }`}>
               <div className="max-h-48 overflow-y-auto">
                 <button
+                  type="button"
                   onClick={() => handleCityChange("")}
                   title="Select All Locations"
                   className="w-full px-4 py-3 text-left hover:bg-[rgb(40,94,80)]/10 transition-all duration-200 font-body border-b border-gray-100 last:border-b-0"
@@ -244,6 +246,7 @@ export default function Home() {
                 </button>
                 {filterOptions.cities.map(city => (
                   <button
+                    type="button"
                     key={city}
                     onClick={() => handleCityChange(city)}
                     className={`w-full px-4 py-3 text-left hover:bg-[rgb(40,94,80)]/10 transition-all duration-200 font-body border-b border-gray-100 last:border-b-0 ${
@@ -260,6 +263,7 @@ export default function Home() {
           {/* Specialization Button */}
           <div>
             <button
+              type="button"
               onClick={openSpecialtyModal}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[rgb(40,94,80)]/20 focus:border-[rgb(40,94,80)] font-body transition-all duration-300 hover:bg-white/90 shadow-sm hover:shadow-md text-left flex items-center justify-between"
             >
@@ -293,6 +297,7 @@ export default function Home() {
                 Selected Specializations ({filters.selectedSpecialties.length})
               </h3>
               <button
+                type="button"
                 onClick={resetFilters}
                 className="text-sm text-gray-600 hover:text-[rgb(40,94,80)] transition-colors font-body underline"
               >
@@ -307,6 +312,7 @@ export default function Home() {
                 >
                   {getSpecialtyBySlug(specialty)?.label || specialty}
                   <button
+                    type="button"
                     title="Set Filters"
                     onClick={() => setFilters(prev => ({
                       ...prev,
@@ -417,6 +423,7 @@ export default function Home() {
         >
           <p className="text-gray-500 text-lg font-body">No advocates found matching your criteria.</p>
           <button
+            type="button"
             onClick={resetFilters}
             className="mt-4 bg-[#1d4339] text-white px-4 py-2 rounded-md hover:bg-[#0f2a24] transition-colors font-subheading"
           >
@@ -429,6 +436,7 @@ export default function Home() {
       {!loading && pagination.totalPages > 1 && (
         <div className="flex justify-center items-center space-x-2">
           <button
+            type="button"
             onClick={() => handlePageChange(pagination.currentPage - 1)}
             disabled={!pagination.hasPreviousPage}
             className="px-3 py-2 text-sm bg-gray-200 text-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 font-subheading"
@@ -438,6 +446,7 @@ export default function Home() {
           
           {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(page => (
             <button
+              type="button"
               key={page}
               onClick={() => handlePageChange(page)}
               className={`px-3 py-2 text-sm rounded-md font-subheading ${
@@ -451,6 +460,7 @@ export default function Home() {
           ))}
           
           <button
+            type="button"
             onClick={() => handlePageChange(pagination.currentPage + 1)}
             disabled={!pagination.hasNextPage}
             className="px-3 py-2 text-sm bg-gray-200 text-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 font-subheading"
@@ -470,6 +480,7 @@ export default function Home() {
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-2xl font-heading text-gray-800">Select Specializations</h2>
               <button
+                type="button"
                 title="Close Speciality Modal"
                 onClick={closeSpecialtyModal}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
@@ -494,6 +505,7 @@ export default function Home() {
                     >
                       {getSpecialtyBySlug(specialty)?.label || specialty}
                       <button
+                        type="button"
                         title="Toggle Temp Specialty"
                         onClick={() => toggleTempSpecialty(specialty)}
                         className="ml-1 hover:bg-white/20 rounded-full p-0.5 transition-colors"
@@ -518,6 +530,7 @@ export default function Home() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {categorySpecialties.map(specialty => (
                       <button
+                        type="button"
                         key={specialty.slug}
                         onClick={() => toggleTempSpecialty(specialty.slug)}
                         className={`p-4 rounded-xl border-2 text-left transition-all duration-200 font-body ${
@@ -554,12 +567,14 @@ export default function Home() {
                 </span>
                 <div className="flex gap-3">
                   <button
+                    type="button"
                     onClick={closeSpecialtyModal}
                     className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-subheading"
                   >
                     Cancel
                   </button>
                   <button
+                    type="button"
                     onClick={applySpecialties}
                     disabled={tempSelectedSpecialties.length === 0}
                     className="px-6 py-2 bg-[rgb(40,94,80)] text-white rounded-lg hover:bg-[rgb(52,120,102)] disabled:opacity-50 disabled:cursor-not-allowed transition-all font-subheading"

@@ -15,20 +15,10 @@ export async function GET(request: NextRequest) {
   
   // Get filter parameters
   const searchTerm = searchParams.get("search") || "";
-  const selectedCityDisplay = searchParams.get("city") || "";
+  const selectedCity = searchParams.get("city") || "";
   const selectedSpecialties = searchParams.get("specialties")?.split(",").filter(Boolean) || [];
-  console.log("Query string is: ",searchParams.get("specialties"));
-  console.log("Selected City display is: ",selectedCityDisplay);
-  console.log("Selected specialties are: ",selectedSpecialties);
-
-  // Convert "City, State" back to just city name for database filtering
-  const selectedCity = selectedCityDisplay.includes(',') 
-    ? selectedCityDisplay.split(',')[0].trim() 
-    : selectedCityDisplay;
   
   try {
-    // Get all data from database for filter options
-    const allData = await db.select().from(advocates);
     
     // Build where conditions
     const conditions = [];
@@ -48,14 +38,24 @@ export async function GET(request: NextRequest) {
       conditions.push(sql`${advocates.city} = ${selectedCity}`);
     }
     
-    // Filter by specialties (check if any selected specialty exists in the JSONB array)
-    if (selectedSpecialties.length > 0) {
-      const specialtyConditions = selectedSpecialties.map(specialty => {
-        const jsonArray = JSON.stringify([specialty]);
-        return sql.raw(`payload @> '${jsonArray}'`);
-      });
-      conditions.push(or(...specialtyConditions));
-    }
+// ALL selected slugs must be present (strict AND via EXISTS per slug)
+if (selectedSpecialties.length > 0) {
+  const mustHaveAll = selectedSpecialties
+    .map(s => s.trim())
+    .filter(Boolean)
+    .map(s =>
+      sql`
+        EXISTS (
+          SELECT 1
+          FROM jsonb_array_elements_text(((${advocates.specialties} #>> '{}')::jsonb)) AS e(val)
+          WHERE val = ${s}
+        )
+      `
+    );
+
+  // AND all EXISTS together
+  conditions.push(and(...mustHaveAll));
+}
     
     // Get filtered data with pagination
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
@@ -67,8 +67,6 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .offset(offset);
     
-    const filteredData = rawFilteredData;
-    
     // Get total count for pagination
     const totalCountResult = await db
       .select({ count: sql<number>`count(*)` })
@@ -78,14 +76,17 @@ export async function GET(request: NextRequest) {
     const totalCount = totalCountResult[0]?.count || 0;
     const totalPages = Math.ceil(totalCount / limit);
     
-    // Get unique cities for filter options
-    const allCities = Array.from(new Set(allData.map((advocate: any) => advocate.city))).sort();
+    // Get unique cities for filter options (only when needed)
+    const allCities = await db
+      .selectDistinct({ city: advocates.city })
+      .from(advocates)
+      .then((rows: Array<{ city: string }>) => rows.map(row => row.city).sort());
     
     // Return all available specialties
     const allSpecialties = specialties.map(s => s.label).sort((a, b) => a.localeCompare(b));
 
     return Response.json({
-      data: filteredData,
+      data: rawFilteredData,
       pagination: {
         currentPage: page,
         totalPages,

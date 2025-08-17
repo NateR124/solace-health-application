@@ -206,7 +206,7 @@ export const locations = [
 export const getLocationBySlug = (slug: string) => 
   locations.find(l => l.slug === slug);
 
-export const getLocationDisplayName= (slug: string) =>
+export const getLocationDisplayName = (slug: string) =>
   {
     const location = getLocationBySlug(slug);
     return location ? `${location.city}, ${location.state}` : slug;

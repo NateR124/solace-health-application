@@ -1,4 +1,4 @@
-import { specialties } from "../../types/specialties";
+import { specialties } from "@/types/specialties";
 
 // Extract just the slugs for random selection
 const specialtySlugs = specialties.map(s => s.slug);
