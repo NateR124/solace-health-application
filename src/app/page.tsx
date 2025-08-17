@@ -9,6 +9,7 @@ export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [loading, setLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
+  const [hasInitialLoad, setHasInitialLoad] = useState(false);
 
   // Format phone number to ###-###-#### format
   const formatPhoneNumber = (phoneNumber: number): string => {
@@ -42,7 +43,17 @@ export default function Home() {
   const fetchAdvocates = useCallback(async (page = 1, searchTerm = "", selectedCity = "", selectedSpecialties: string[] = []) => {
     // start fade-out before firing network
     setShowContent(false);
-    await new Promise(r => setTimeout(r, 300));
+    
+    // Wait for fade-out to complete, then scroll if needed
+    await new Promise(r => setTimeout(r, 700));
+    
+    // Scroll to top between fade-out and new content
+    const mainContainer = document.getElementById('main-scroll-container');
+    if (mainContainer) {
+      mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      // Wait for scroll to complete before proceeding
+      await new Promise(r => setTimeout(r, 500));
+    }
 
     // 1) cancel any previous request immediately
     abortRef.current?.abort();
@@ -73,8 +84,9 @@ export default function Home() {
       await new Promise(r => setTimeout(r, 200));
       setAdvocates(json.data);
       setPagination(json.pagination);
+      setHasInitialLoad(true);
     } catch (err: any) {
-      // 5) ignore aborts; they’re expected when user changes inputs quickly
+      // 5) ignore aborts; they're expected when user changes inputs quickly
       if (err.name !== "AbortError") console.error("Error fetching advocates:", err);
     } finally {
       setLoading(false);
@@ -152,12 +164,6 @@ useEffect(() => {
   // Handle pagination
   const handlePageChange = (page: number) => {
     fetchAdvocates(page, filters.searchTerm, filters.selectedCity, filters.selectedSpecialties);
-    
-    // Scroll to top of page
-    window.scrollTo({ 
-      top: 0, 
-      behavior: 'smooth' 
-    });
   };
 
   // Reset all filters
@@ -180,7 +186,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="h-screen bg-[#1d4339] overflow-auto">
+    <div className="h-screen bg-[#1d4339] overflow-auto" id="main-scroll-container">
       {/* Main Content Area with Curved Corners */}
       <main className="bg-[rgb(255,253,250)] rounded-t-3xl w-full min-h-screen mt-8">
         <div className="container mx-auto px-6 pt-12 pb-8">
@@ -280,7 +286,7 @@ useEffect(() => {
         
         {/* Selected Specialties Display */}
         <div className={`overflow-hidden transition-all duration-600 ease-in-out ${
-          filters.selectedSpecialties.length > 0 ? 'max-h-96 opacity-100 mt-6' : 'max-h-0 opacity-0 mt-0'
+          filters.selectedSpecialties.length > 0 && hasInitialLoad ? 'max-h-96 opacity-100 mt-6' : 'max-h-0 opacity-0 mt-0'
         }`}>
           <div className="p-4 bg-[rgb(40,94,80)]/5 rounded-xl border border-[rgb(40,94,80)]/20">
             <div className="flex items-center justify-between mb-3">
@@ -345,14 +351,20 @@ useEffect(() => {
               
               {/* Advocate Information */}
               <div className="p-4">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  {advocate.firstName} {advocate.lastName}, {advocate.degree}
-                </h3>
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-xl font-bold text-gray-800">
+                    {advocate.firstName} {advocate.lastName}, {advocate.degree}
+                  </h3>
+                  <span className="text-gray-600 text-sm font-medium">
+                    {advocate.yearsOfExperience} years
+                  </span>
+                </div>
                 
                 <div className="space-y-2 text-sm text-gray-600">
-                  <p className="font-body">{getLocationDisplayName(advocate.city)}</p>
-                  <p className="font-body"><span className="font-subheading">Experience:</span> {advocate.yearsOfExperience} years</p>
-                  <p className="font-body">{formatPhoneNumber(advocate.phoneNumber)}</p>
+                  <div className="flex justify-between items-center">
+                    <p className="font-body">{getLocationDisplayName(advocate.city)}</p>
+                    <p className="font-body">{formatPhoneNumber(advocate.phoneNumber)}</p>
+                  </div>
                 </div>
                 
                 {/* Specialties */}
@@ -406,7 +418,7 @@ useEffect(() => {
       </div>
 
       {/* Empty State */}
-      {advocates.length === 0 && (
+      {!loading && hasInitialLoad && advocates.length === 0 && (
         <div 
           className={`text-center py-12 transition-all duration-700 ease-in-out ${
             showContent ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-6'
