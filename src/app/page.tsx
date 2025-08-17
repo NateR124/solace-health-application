@@ -9,11 +9,6 @@ export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [loading, setLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
-  const [currentlyDisplayedFilters, setCurrentlyDisplayedFilters] = useState<FilterState>({
-    searchTerm: "",
-    selectedCity: "",
-    selectedSpecialties: [],
-  });
 
   // Format phone number to ###-###-#### format
   const formatPhoneNumber = (phoneNumber: number): string => {
@@ -74,11 +69,6 @@ export default function Home() {
       setAdvocates(jsonResponse.data);
       setPagination(jsonResponse.pagination);
       setFilterOptions(jsonResponse.filterOptions);
-      setCurrentlyDisplayedFilters({
-        searchTerm,
-        selectedCity,
-        selectedSpecialties
-      });
       setLoading(false);
       
       // Start fade-in transition after a brief delay
@@ -371,10 +361,10 @@ export default function Home() {
                     {(() => {
                       // Separate selected and non-selected specialties
                       const selectedSpecialties = advocate.specialties.filter(specialty => 
-                        currentlyDisplayedFilters.selectedSpecialties.includes(specialty)
+                        filters.selectedSpecialties.includes(specialty)
                       );
                       const otherSpecialties = advocate.specialties.filter(specialty => 
-                        !currentlyDisplayedFilters.selectedSpecialties.includes(specialty)
+                        !filters.selectedSpecialties.includes(specialty)
                       );
                       
                       // Combine with selected first, then others
@@ -389,11 +379,11 @@ export default function Home() {
                               type="button"
                               onClick={() => toggleSpecialtyFromCard(specialty)}
                               className={`inline-block text-xs px-2 py-1 rounded-full font-light transition-all duration-200 hover:scale-105 cursor-pointer ${
-                                currentlyDisplayedFilters.selectedSpecialties.includes(specialty)
+                                filters.selectedSpecialties.includes(specialty)
                                   ? "bg-[rgb(40,94,80)] text-white hover:bg-[rgb(52,120,102)]"
                                   : "bg-[#1d4339]/10 text-[#1d4339] hover:bg-[#1d4339]/20"
                               }`}
-                              title={`${currentlyDisplayedFilters.selectedSpecialties.includes(specialty) ? 'Remove' : 'Add'} ${getSpecialtyBySlug(specialty)?.label || specialty} filter`}
+                              title={`${filters.selectedSpecialties.includes(specialty) ? 'Remove' : 'Add'} ${getSpecialtyBySlug(specialty)?.label || specialty} filter`}
                             >
                               {getSpecialtyBySlug(specialty)?.label || specialty}
                             </button>
