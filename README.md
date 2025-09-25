@@ -1,12 +1,12 @@
 # Context for Maxxsure
 
-Hello Maxxsure! I'm the frontend developer working with the recruiter Mike Cibulsky on the application for your joint Developer/Designer role.
+Hello Maxxsure! I’m the frontend developer working with the recruiter Mike Cibulsky on the application for your joint Developer/Designer role.
 
-Mike told me your team was very interseted in seeing a portfolio of previous deisgn work. I don't have a portfolio page- but figured this recent application I made as part of my interview with Solace Health would work.
+Mike told me your team was very interested in seeing a portfolio of previous design work. I don’t have a portfolio page—but figured this recent application I made as part of my interview with Solace Health would work.
 
-The short version is this - Solace Health is a healthcare advocacy platform, and tasked me with taking their "advocate browser", and both rewriting the code, while enhancing the UI/UX.
+The short version is this: Solace Health is a healthcare advocacy platform, and tasked me with taking their “advocate browser” and both rewriting the code while enhancing the UI/UX.
 
-In the Discussion.Md file, you can see my notes on my UI/UX rework- my thoughts, along with some screenshots of the application I build.
+In the Discussion.md file, you can see my notes on my UI/UX rework—my thoughts, along with some screenshots of the application I built.
 
 Feel free to reach out with any questions, thanks!
 
